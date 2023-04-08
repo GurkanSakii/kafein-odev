@@ -1,0 +1,41 @@
+.episodeBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin: 40px;
+
+  &> .filterHeader{
+    min-width: 120px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  & > .episodeCard {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+
+
+    & > .episodeCardContent {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      height: 105px;
+    }
+
+    & > .characterContent{
+      display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    }
+  }
+}

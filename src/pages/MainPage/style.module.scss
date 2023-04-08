@@ -1,0 +1,26 @@
+.episodeBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  & > .episodeCard {
+    min-height: 250px;
+    width: 200px;
+    margin: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+
+    & > .episodeCardContent {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      height: 105px;
+    }
+  }
+}
