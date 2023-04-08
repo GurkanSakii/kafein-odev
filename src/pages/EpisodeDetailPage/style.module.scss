@@ -5,12 +5,13 @@
   flex-direction: column;
   margin: 40px;
 
-  &> .filterHeader{
+  & > .filterHeader {
     min-width: 120px;
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
     margin-bottom: 10px;
   }
 
@@ -19,8 +20,6 @@
     display: flex;
     flex-direction: column;
     justify-content: space-around;
-
-
 
     & > .episodeCardContent {
       overflow: hidden;
@@ -31,11 +30,11 @@
       height: 105px;
     }
 
-    & > .characterContent{
+    & > .characterContent {
       display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
     }
   }
 }

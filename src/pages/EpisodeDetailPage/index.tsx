@@ -24,9 +24,6 @@ const EpisodeDetailPage = () => {
     id: number;
     name: string;
     image: string;
-    type: string;
-    status: string;
-    gender: string;
   }
   const { episodeId } = useParams();
   const [details, setDetails] = useState<Detail>({
@@ -36,6 +33,7 @@ const EpisodeDetailPage = () => {
   });
   const [characters, setCharacters] = useState<Character[]>([]);
   const [searchText, setSearchText] = useState('');
+  const [filterState, setFilterState] = useState('default');
   const [sortState, setSortState] = useState('id');
   const [loading, setIsLoading] = useState(true);
 
@@ -61,13 +59,16 @@ const EpisodeDetailPage = () => {
     status: { method: (a, b) => (a.status < b.status ? -1 : 1) },
   };
 
-  const filterCharacters = characters.filter(
-    ({ type, status, gender, name }) =>
-      type.toLowerCase().includes(searchText.toLowerCase()) ||
-      status.toLowerCase().includes(searchText.toLowerCase()) ||
-      gender.toLowerCase().includes(searchText.toLowerCase()) ||
-      name.toLowerCase().includes(searchText.toLowerCase())
-  );
+  const filterMethods = {
+    default: { method: (a) => a },
+    type: { method: (a) => a.type.length > 0 },
+    deadStatus: { method: (a) => a.status.length > 0 && a.status == 'Dead' },
+    aliveStatus: { method: (a) => a.status.length > 0 && a.status == 'Alive' },
+    maleGender: { method: (a) => a.gender.length > 0 && a.gender == 'Male' },
+    femaleGender: { method: (a) => a.gender.length > 0 && a.gender == 'Female' },
+  };
+
+  const filterCharacters = characters.filter(({ name }) => name.toLowerCase().includes(searchText.toLowerCase()));
 
   return (
     <Box className={classes.episodeBox}>
@@ -77,12 +78,31 @@ const EpisodeDetailPage = () => {
         <>
           <Box sx={{ minWidth: 120 }} className={classes.filterHeader}>
             <TextField
-              label="Search"
+              sx={{ m: 1 }}
+              label="Search Name"
               variant="standard"
               value={searchText}
               onChange={({ target }) => setSearchText(target.value)}
             />
-            <FormControl>
+            <FormControl sx={{ m: 1 }}>
+              <InputLabel id="demo-simple-select-label">Filter By</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                sx={{ minWidth: 150 }}
+                value={filterState}
+                label="Filter by"
+                onChange={(e) => setFilterState(e.target.value)}
+              >
+                <MenuItem value={'default'}>default</MenuItem>
+                <MenuItem value={'type'}>According to: Exist Type</MenuItem>
+                <MenuItem value={'aliveStatus'}>According to: Alive Status</MenuItem>
+                <MenuItem value={'deadStatus'}>According to: Dead Status</MenuItem>
+                <MenuItem value={'maleGender'}>According to : Male Gender</MenuItem>
+                <MenuItem value={'femaleGender'}>According to : Female Gender</MenuItem>
+              </Select>
+            </FormControl>
+            <FormControl sx={{ m: 1 }}>
               <InputLabel id="demo-simple-select-label">Sort By</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
@@ -113,18 +133,21 @@ const EpisodeDetailPage = () => {
               <Typography color="text.secondary">{details.air_date}</Typography>
             </CardContent>
             <Box className={classes.characterContent}>
-              {filterCharacters.sort(sortMethods[sortState].method).map((character) => (
-                <Box
-                  key={character.id}
-                  sx={{ height: 300, width: 300, m: 1 }}
-                  component="img"
-                  alt={`${character.name}`}
-                  height="140"
-                  src={`${character.image}`}
-                  title={`${character.name}`}
-                />
-              ))}
-              {filterCharacters.length < 1 && (
+              {filterCharacters
+                .sort(sortMethods[sortState].method)
+                .filter(filterMethods[filterState].method)
+                .map((character) => (
+                  <Box
+                    key={character.id}
+                    sx={{ height: 300, width: 300, m: 1 }}
+                    component="img"
+                    alt={`${character.name}`}
+                    height="140"
+                    src={`${character.image}`}
+                    title={`${character.name}`}
+                  />
+                ))}
+              {filterCharacters.filter(filterMethods[filterState].method).length < 1 && (
                 <Typography component="h5" variant="h5" sx={{ mb: 3 }}>
                   Data Not Found
                 </Typography>
